@@ -23,6 +23,7 @@ On SUBSCRIBE file:
     * Under constant declarations, change the SSID and Password for your wifi network credentials
     * Change ID for a unique name that refers your device, 
     * Change TOPIC to match the same topic on publish device;
+    
     /*+--------------------------------------------------------------------------------------+
      *| Constants declaration                                                                |
      *+--------------------------------------------------------------------------------------+ */
