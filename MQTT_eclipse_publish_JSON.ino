@@ -132,43 +132,24 @@ void reconnect() {
  
 String DateAndTime(){
 
-  String FullFormattedDate;
-  
-  timeClient.setTimeOffset(-10800);                           // Set offset time in seconds to adjust timezone
+    timeClient.setTimeOffset(-10800);                       // Set offset time in seconds to adjust for your timezone, for example:
+                                                            // GMT +1 = 3600
+                                                            // GMT +8 = 28800
+                                                            // GMT -1 = -3600
+                                                            // GMT 0 = 0
     while(!timeClient.update()) {
       timeClient.forceUpdate();
     }
 
-  //Get a time structure
-  unsigned long epochTime = timeClient.getEpochTime();
-  struct tm *ptm = gmtime ((time_t *)&epochTime); 
-    int monthDay = ptm->tm_mday;
-    int currentMonth = ptm->tm_mon+1;
-    int currentYear = ptm->tm_year+1900;
+  time_t epochTime = timeClient.getEpochTime();              // The time_t type is just an integer. 
+                                                             //It is the number of seconds since the Epoch.
+  struct tm * tm = localtime(&epochTime);
+  char dts[22];
+    strftime(dts, sizeof(dts), "%d%b%Y %H-%M-%S", tm);       // https://www.cplusplus.com/reference/ctime/strftime/
   
-    int currentHour = ptm->tm_hour;
-    int currentMin = ptm->tm_min;
-    int currentSec = ptm->tm_sec;
-
-
-  String currentTime = String(currentHour)+                       
-                       ":" +
-                       String(currentMin)+
-                       ":" +
-                       String(currentSec); 
-
-  String currentDate = String(monthDay)+                           
-                       "-" +
-                       String(currentMonth)+
-                       "-" +
-                       String(currentYear); 
-
-  FullFormattedDate = currentDate + " " +currentTime;
-
-  return FullFormattedDate;                          
-  
+  return dts;
+ 
 }
-
 
 /*+--------------------------------------------------------------------------------------+
  *| Setup                                                                                |
@@ -186,12 +167,7 @@ void setup() {
     client.setServer(BROKER_MQTT, 1883);              // MQTT port, unsecure
 
   timeClient.begin();                                 // Initialize a NTPClient to get time
-  timeClient.setTimeOffset(3600);                     // Set offset time in seconds to adjust for your timezone, for example:
-                                                      // GMT +1 = 3600
-                                                      // GMT +8 = 28800
-                                                      // GMT -1 = -3600
-                                                      // GMT 0 = 0
-     
+  
 }
 
 
